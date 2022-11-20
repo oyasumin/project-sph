@@ -6,11 +6,17 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <!-- 没有用户名，未登录 -->
+          <p v-if="!userName">
             <span>请</span>
             <!-- 声明式导航：务必要有to属性 -->
             <router-link to="/login">登录</router-link>
             <router-link href="###" class="register" to="/register">免费注册</router-link>
+          </p>
+          <!-- 登录了 -->
+          <p v-else>
+            <a>{{userName}}</a>
+            <a class="register">退出登录</a>
           </p>
         </div>
         <div class="typeList">
@@ -65,7 +71,11 @@ export default {
     };
   },
   //计算属性 类似于data概念
-  computed: {},
+  computed: {
+    userName(){
+      return this.$store.state.user.userInfo.name;
+    }
+  },
   //监控 data 中的数据变化
   watch: {},
   //方法集合

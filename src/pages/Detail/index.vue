@@ -393,6 +393,7 @@ export default {
     },
     // 表单元素修改产品个数
     changeSkuNum(event) {
+      // *1时，如果输入非法，则结果为NaN
       let value = event.target.value * 1;
       if(isNaN(value)||value<1){
         this.skuNum = 1;
@@ -408,6 +409,7 @@ export default {
         // 路由跳转
         // 简单的数据通过query形式给路由组件传递过去
         // 产品信息的数据（比较复杂的数据），通过会话存储（不持久化，会话结束消失）
+        // vuex中存储数据不持久，一刷新就没了，而购物车中数据需要刷新后依然存在
         // 本地存储|会话存储，一般存储的是字符串
         sessionStorage.setItem("SKUINFO",JSON.stringify(this.skuInfo));
         this.$router.push({name:'addcartsuccess',query:{skuNum:this.skuNum}});
