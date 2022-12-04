@@ -1,5 +1,5 @@
-import { reqGetCode,reqUserRegister,reqUserLogin,reqUserInfo } from "@/api";
-import { setToken,getToken } from "@/utils/token";
+import { reqGetCode,reqUserRegister,reqUserLogin,reqUserInfo,reqLogout } from "@/api";
+import { setToken,getToken,removeToken } from "@/utils/token";
 
 const state = {
     code: "",
@@ -15,7 +15,13 @@ const mutations = {
     },
     GETUSERINFO(state,userInfo){
         state.userInfo = userInfo;
-    }
+    },
+    CLEAR(state){
+        state.token = '';
+        state.userInfo = {};
+        // 本地存储清空
+        removeToken();
+    },
 };
 const actions = {
     // 获取验证码
@@ -49,7 +55,7 @@ const actions = {
             return Promise.reject(new Error('fail'));
         }
     },
-    //获取用户信息
+    // 获取用户信息
     async getUserInfo(){
         let result = await reqUserInfo();
         if (resulr.code==200) {
@@ -60,7 +66,19 @@ const actions = {
         } else {
             return Promise.reject(new Error('fail'));
         }
-    }
+    },
+    // 退出登录
+    async userLogout({commit}){
+        // 只是向服务器发请求，通知服务器清除token
+        let result = await reqLogout();
+        // action里面不能操作state，需要提交mutation修改state
+        if (result.code==200) {
+            commit("CLEAR");
+            return "ok";
+        } else {
+            return Promise.reject(new Error('fail'));
+        }
+    },
 };
 const getters = {};
 
