@@ -13,7 +13,7 @@
       <div class="cart-body">
         <ul
           class="cart-list"
-          v-for="(cart.index) in cartInfoList"
+          v-for="(cart,index) in cartInfoList"
           :key="cart.id"
         >
           <li class="cart-list-con1">
@@ -81,7 +81,7 @@
           <i class="summoney">{{ totalPrice }}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <router-link class="sum-btn" to="/trade">结算</router-link>
         </div>
       </div>
     </div>

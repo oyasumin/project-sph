@@ -54,8 +54,8 @@ export default {
   mounted() {
     // 派发action，获取floor的数据
     this.$store.dispatch("getFloorList");
-    // 获取用户信息在首页展示
-    this.$store.dispatch("getUserInfo");
+    // // 获取用户信息在首页展示，从Home跳转到其它页面是会有userInfo的，但是在目标页面一刷新就没有了（vuex是内存数据）
+    // this.$store.dispatch("getUserInfo");
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前

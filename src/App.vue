@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <!-- 测试自定义组件 -->
+    <h1 v-upper="msg"></h1>
     <Header></Header>
     <!-- 路由组件出口的地方 -->
     <router-view></router-view>
@@ -16,6 +18,11 @@ import Footer from './components/Footer'
 // 注册
 export default {
   name: '',
+  data() {
+    return {
+      msg:"abc"
+    }
+  },
   components: {
     Header,
     Footer

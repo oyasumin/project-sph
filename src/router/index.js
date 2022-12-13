@@ -60,11 +60,50 @@ let router = new VueRouter({
 });
 
 // 全局守卫：前置守卫（在路由跳转之前进行判断）
-router.beforeEach((to,from,next)=>{
+router.beforeEach(async (to,from,next)=>{
   // to：可以获取到你要跳转到那个路由的信息
   // from：可以获取到你从哪个路由来的信息
   // next：放行函数
   // next(); next('/login');->跳转至指定路由 next(false);->跳转至from的路由
+  // next()的效果和return不一样，不会导致函数退出
+  
+  // 用户登录了，才会有token，未登录一定不会有token
+  let token = store.state.user.token
+  // 用户信息，字符串空为false，但是对象空为true
+  let name =  store.state.user.userInfo.name;
+
+  if (token) {
+    // 已经登录了则不可以去login[不能去，停留在首页]
+    if (to.path=='/login') {
+      next('/');
+    } else {
+      // 登录了，但是去的不是login
+      // 如果用户名已有
+      if (name) {
+        next();
+      } else {
+        // 没有用户信息，派发action让仓库存储用户信息再跳转
+        try {
+          // 获取用户信息成功
+          await store.dispatch("getUserInfo");
+          next();
+        } catch (error) {
+          // 获取用户信息失败，可能是token已过期导致获取不到用户信息，需要重新登录
+          await store.dispatch('userLogout');
+          next('/login');
+        }
+      }
+    }
+  } else {   
+    // 未登录，不能去交易相关页面
+    let toPath = to.path;
+    if (toPath.indexOf('/trade')!=-1 || toPath.indexOf('/pay')!=-1 || toPath.indexOf('/center')!=-1) {
+      // 把未登录的时候想去没去成的地址存在路由中
+      next('/login?redirect='+toPath);
+    } else {
+      next();
+    }
+  }
 });
 
 export default router;
